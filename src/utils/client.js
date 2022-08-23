@@ -1,3 +1,5 @@
-import Client from "@matfire/the_movie_wrapper"
+import API from "@matfire/the_movie_wrapper"
 
-export default new Client(import.meta.env.VITE_TMDB_KEY)
+const client = new API(import.meta.env.VITE_TMDB_KEY)
+
+export default client

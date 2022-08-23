@@ -15,10 +15,11 @@ const movie = client.movies.getMovie(id, ["videos", "keywords", "credits"])
     {@const director = movie.credits?.crew.find((e) => e.job === "Director")}
     {@const screenwriters = movie.credits?.crew.filter((e) => e.job === "Writer") || []}
     {@const producers = movie.credits?.crew.filter((e) => e.job === "Producer") || []}
+    {@const cast = movie.credits?.cast || []}
 
     <div class="w-full">
         <div class="mx-auto container">
-            <div in:fade="{{delay:400}}" class="flex justify-between text-2xl mb-3 items-center">
+            <div in:fade="{{delay:400}}" out:fly="{{y:-200}}" class="flex justify-between text-2xl mb-3 items-center">
                 <div>
                     <h1 class="font-bold text-3xl">{movie.title}</h1>
                     <p>
@@ -29,24 +30,24 @@ const movie = client.movies.getMovie(id, ["videos", "keywords", "credits"])
                 </div>
                 <p class=""><span class=" text-blue-500 font-bold">{movie.vote_average}</span>/10</p>
             </div>
-            <div class="flex justify-evenly gap-6">
-                <div class="w-auto">
-                    <div class="w-auto">
-                        <img class="w-96 h-auto" in:fly="{{y:-200, duration:1000}}" src="{client.getImageUrl(movie.poster_path, "w500")}" alt="{movie.title} poster" />
-                        <div in:fade="{{delay:1010}}" class="w-full flex justify-between items-center mt-1">
+            <div class="flex justify-evenly gap-6 w-full">
+                <div class="w-1/3">
+                    <div>
+                        <img out:fly="{{y:-200}}" in:fly="{{y:-200, duration:1000}}" src="{client.getImageUrl(movie.poster_path, "w500")}" alt="{movie.title} poster" />
+                        <div in:fade="{{delay:1010}}" out:fly="{{y:-200}}" class="w-full flex justify-between items-center mt-1">
                             <p class="font-semibold text-xl">${Intl.NumberFormat().format(movie.revenue)}</p>
                             <a class="border border-black rounded-lg px-4 py-1 uppercase hover:scale-110 hover:text-white hover:bg-black transition-all" href="/movie/{movie.id}/watch">Watch</a>
                         </div>
                     </div>
                 </div>
-                <div in:fade="{{delay:1500}}">
+                <div in:fade="{{delay:1500}}" out:fly="{{y:-200}}">
                     <h4 class="font-bold text-xl mb-2">About the Movie</h4>
                     <p>{movie.overview}</p>
                     <div class="w-full flex justify-between mt-3">
                         <div>
                             <h4 class="font-semibold mb-1">Actors</h4>
                             <ul>
-                                {#each movie.credits?.cast.slice(0, 6) as person}
+                                {#each cast.slice(0, 6) as person}
                                     <a class="text-blue-500 hover:underline transition" href="/person/{person.id}"><li>{person.name}</li></a>
                                 {/each}
                             </ul>
@@ -69,6 +70,8 @@ const movie = client.movies.getMovie(id, ["videos", "keywords", "credits"])
                                 <ul>
                                     {#each producers as producer}
                                         <li>{producer.name}</li>
+                                        {:else}
+                                                <p>N/A</p>                                            
                                     {/each}
 
                                 </ul>
